@@ -1,0 +1,70 @@
+<header>
+    <ul>
+        <li><a href="#">Home</a></li>
+        <li><a href="#">Login</a></li>
+    </ul>
+</header>
+
+<main>
+    <section class="form">
+        <h1>{{title}}</h1>
+        <form method="POST" id="form" action="/petition">
+            <label for="first_name">First name</label>
+            <input
+                type="text"
+                id="first_name"
+                name="first_name"
+                value="{{first_name}}"
+                placeholder="First Name"
+                required
+            />
+            <label for="last_name">Last name</label>
+            <input
+                type="text"
+                id="last_name"
+                name="last_name"
+                value="{{last_name}}"
+                placeholder="Last name"
+                required
+            />
+            {{!-- <label for="signature">Signature</label>
+            <input
+                type="text"
+                id="signature"
+                name="signature"
+                value="{{signature}}"
+                placeholder="Signature"
+                required
+            /> --}}
+            <input type="hidden" name="signature" />
+            <div class="flex-row">
+                <div class="wrapper">
+                    <canvas
+                        id="signature-pad"
+                        width="400"
+                        height="200"
+                    ></canvas>
+                </div>
+                <div class="clear-btn">
+                    <button id="clear"><span> Clear </span></button>
+                </div>
+            </div>
+            <script
+                src="https://cdnjs.cloudflare.com/ajax/libs/signature_pad/1.3.5/signature_pad.min.js"
+                integrity="sha512-kw/nRM/BMR2XGArXnOoxKOO5VBHLdITAW00aG8qK4zBzcLVZ4nzg7/oYCaoiwc8U9zrnsO9UHqpyljJ8+iqYiQ=="
+                crossorigin="anonymous"
+                referrerpolicy="no-referrer"
+            ></script>
+            <button id="submit">Submit</button>
+
+            {{#if error}}
+                <p class="error">{{error}}</p>
+            {{/if}}
+            {{! <a href="/petition/thanks"><button id="submit">Submit</button></a> }}
+        </form>
+        {{! <a href="/petition"><button>Go back</button></a> }}
+
+    </section>
+
+</main>
+<script src="/index.js"></script>
