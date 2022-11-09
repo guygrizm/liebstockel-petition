@@ -48,19 +48,14 @@ app.post("/petition", async (request, response) => {
     }
 });
 
-app.get("/petition/thanks", (request, response) => {
-    // get the users from the db
-    // then() render the appropriate hbs template and pass the users to it
-    getSignatures().then((signatures) => {
-        response.render("thanks", {
-            title: "Thank you for signing our petition!",
-            signatures,
-        });
-    });
+app.get("/petition/thanks", async (request, response) => {
+    const signers = await getSignatures();
+    response.render("thanks", { signers });
 });
-app.get("/petition/signers", (request, response) => {
-    getSignatures().then((signer) => response.render("signers", { signer }));
-    // console.log("response", res);
+
+app.get("/petition/signers", async (request, response) => {
+    const signers = await getSignatures();
+    response.render("signers", { signers });
 });
 const port = process.env.PORT || 8080;
 app.listen(port, () => console.log(`Listening on http://localhost:${port}`));

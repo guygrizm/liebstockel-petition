@@ -14,17 +14,18 @@ function getSignatures() {
 }
 
 // singular method - should return the first entry of result.rows
-function getSignaturesById(id) {
+/* function getSignaturesById(id) {
     return db
         .query(`SELECT * FROM signatures WHERE id = $1`, [id])
         .then((result) => result.rows[0]);
-}
+} */
 
 function newSignature(first_name, last_name, signature) {
     return db
         .query(
             `INSERT INTO signatures (first_name, last_name, signature)
-        VALUES ($1, $2, $3)`,
+        VALUES ($1, $2, $3)
+        RETURNING *`,
             [first_name, last_name, signature]
         )
         .then((result) => result.rows[0]);
@@ -46,7 +47,7 @@ function newSignature(first_name, last_name, signature) {
 module.exports = {
     getSignatures,
     newSignature,
-    getSignaturesById,
+    /* getSignaturesById, */
     /* newUser,
     editUser,  */
 };

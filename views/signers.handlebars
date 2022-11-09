@@ -5,27 +5,13 @@
     </ul>
 </header>
 
-<h1>{{title}}</h1>
+<h1>These are our {{signers.length}} Signers</h1>
 
-<table>
-    <thead>
-        <tr>
-            <th>#</th>
-            <th>Name</th>
-
-        </tr>
-    </thead>
-    <tbody>
-        {{#each signatures}}
-            <tr>
-                <td><input type="checkbox" name="" id="" /></td>
-                <td>{{first_name}} {{last_name}}</td>
-                <td>{{signatures}}</td>
-
-            </tr>
-        {{/each}}
-    </tbody>
-</table>
+<ul class="signers">
+    {{#each signers}}
+        <li>{{first_name}} {{last_name}}</li>
+    {{/each}}
+</ul>
 
 {{! <a href="/admin/users/create_user" <button="newUser">Create new user</button></a>
 <button class="deleteUser" disabled>Delete User</button> }}

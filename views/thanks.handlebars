@@ -4,28 +4,16 @@
 
     </ul>
 </header>
-
-<h1>{{title}}</h1>
-
-<table>
-    <thead>
-        <tr>
-
-            <th>Petition Signers</th>
-
-        </tr>
-    </thead>
-    <tbody>
-        {{#each signatures}}
+<h1>Thank you for signing the petition!</h1>
+<a href="/petition/signers">See all {{signers.length}} signers</a>
+{{!--  {{#each signatures}}
             <tr>
                 <td><input type="checkbox" name="" id="" /></td>
                 <td>{{first_name}} {{last_name}}</td>
                 <td>{{signatures}}</td>
 
             </tr>
-        {{/each}}
-    </tbody>
-</table>
+        {{/each}} --}}
 
 {{! <a href="/admin/users/create_user" <button="newUser">Create new user</button></a>
 <button class="deleteUser" disabled>Delete User</button> }}

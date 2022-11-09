@@ -12,6 +12,7 @@ body {
     width: 100vw;
     background: #ececec;
     overflow: hidden;
+    flex-direction: column;
 }
 .flex-row {
     display: flex;
