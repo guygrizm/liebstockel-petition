@@ -4,14 +4,20 @@
 
     </ul>
 </header>
-<h1>Thank you for signing the petition!</h1>
-<a href="/petition/signers">See all {{signers.length}} signers</a>
+{{#signer}}
+    <h1>Thank you for signing the petition!</h1>
+    <a href="/petition/signers">See all {{signers.length}} signers</a>
+    <img
+        class="signature"
+        src="{{signature}}"
+        alt="{{first_name}} {{last_name}}"
+    />
+{{/signer}}
 {{!--  {{#each signatures}}
             <tr>
                 <td><input type="checkbox" name="" id="" /></td>
                 <td>{{first_name}} {{last_name}}</td>
                 <td>{{signatures}}</td>
-
             </tr>
         {{/each}} --}}
 

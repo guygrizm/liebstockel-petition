@@ -14,11 +14,11 @@ function getSignatures() {
 }
 
 // singular method - should return the first entry of result.rows
-/* function getSignaturesById(id) {
+function getSignatureById(id) {
     return db
         .query(`SELECT * FROM signatures WHERE id = $1`, [id])
         .then((result) => result.rows[0]);
-} */
+}
 
 function newSignature(first_name, last_name, signature) {
     return db
@@ -47,7 +47,7 @@ function newSignature(first_name, last_name, signature) {
 module.exports = {
     getSignatures,
     newSignature,
-    /* getSignaturesById, */
+    getSignatureById,
     /* newUser,
     editUser,  */
 };
