@@ -1,15 +1,15 @@
 <header>
     <ul>
-        <li><a href="#">Home</a></li>
-        <li><a href="#">Login</a></li>
+        {{! <li><a href="#">Home</a></li> }}
+        {{! <li><a href="#">Login</a></li> }}
     </ul>
 </header>
 
 <main>
     <section class="form">
-        <h1>{{title}}</h1>
+        <h1>Please sign this empty but fabulous petition!</h1>
         <form method="POST" id="form" action="/petition">
-            <label for="first_name">First name</label>
+            {{!-- <label for="first_name">First name</label>
             <input
                 type="text"
                 id="first_name"
@@ -26,7 +26,7 @@
                 value="{{last_name}}"
                 placeholder="Last name"
                 required
-            />
+            /> --}}
             {{!-- <label for="signature">Signature</label>
             <input
                 type="text"

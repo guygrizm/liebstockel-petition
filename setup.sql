@@ -2,18 +2,24 @@ DROP TABLE IF EXISTS signatures;
 
 CREATE TABLE signatures (
     id SERIAL PRIMARY KEY,
-    first_name VARCHAR NOT NULL CHECK(first_name != ''),
-    last_name VARCHAR NOT NULL CHECK(last_name != ''),
     signature VARCHAR NOT NULL CHECK(signature != '')
-
+    users_id INTEGER
 );
 
-INSERT INTO
-    signatures (
-        first_name,
-        last_name,
-        signature 
-        );
+CREATE TABLE users (
+    id SERIAL PRIMARY KEY,
+    first_name VARCHAR(255) NOT NULL,
+    last_name VARCHAR(255) NOT NULL,
+    email VARCHAR(50) NOT NULL UNIQUE,
+    password_hash VARCHAR NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+)
 
+ /* INSERT INTO
+    signatures (
+        
+        signature 
+        ); 
+  */
 
         

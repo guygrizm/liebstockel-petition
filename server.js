@@ -1,5 +1,11 @@
 const express = require("express");
-const { getSignatureById, getSignatures, newSignature } = require("./db");
+const {
+    getSignatureById,
+    getSignatures,
+    newSignature,
+    login,
+    createUser,
+} = require("./db");
 const { engine } = require("express-handlebars");
 const path = require("path");
 const { request } = require("http");
@@ -21,44 +27,49 @@ app.use(
     })
 );
 
-/* app.get("/petition", (request, response) => {
-    getSignatures().then((signatures) => {
-        response.render("petition", {
-            title: "Sign this empty but awesome petition!",
-            signatures,
-        });
-    });
-}); */
+app.get("/register", (request, response) => {
+    response.render("register");
+});
+
+app.post("/register", async (request, response) => {
+    try {
+        const newUser = await createUser(request.body);
+        request.session.user_id = newUser.id;
+        response.redirect("/petition");
+    } catch (error) {
+        console.log("error register", error);
+    }
+});
+
+app.get("/login", (request, response) => {
+    response.render("login");
+});
+
+app.post("/login", async (request, response) => {
+    try {
+        const loggedUser = await login(request.body);
+        if (!loggedUser) {
+            return;
+        }
+        request.session.users_id = loggedUser.id;
+        response.redirect("/petition");
+    } catch (error) {
+        console.log("error login", error);
+    }
+});
 
 app.get("/petition", (request, response) => {
     const signature_id = request.session.signatures_id;
     if (signature_id) {
-        response.redirect("petition/thanks");
+        response.redirect("/petition/thanks");
         return;
     }
     response.render("petition");
 });
 
-/* app.post("/petition", async (request, response) => {
-    console.log("POST /petition", request.body);
-    try {
-        await newSignature(
-            request.body.first_name,
-            request.body.last_name,
-            request.body.signature
-        );
-
-        response.redirect("/petition/thanks");
-    } catch (error) {
-        console.log("error", error);
-        response.render("petition", {
-            error: "Something went wrong. Please try again!",
-        });
-    }
-}); */
 app.post("/petition", async (request, response) => {
     try {
-        const newSigner = await newSignature(request.body);
+        const newSigner = await newSignature(request.body, request.session);
         request.session.signatures_id = newSigner.id;
         console.log("SESSION", request.session);
         response.redirect("/petition/thanks");
@@ -70,15 +81,10 @@ app.post("/petition", async (request, response) => {
     }
 });
 
-/* app.get("/petition/thanks", async (request, response) => {
-    const signers = await getSignatures();
-    response.render("thanks", { signers });
-}); */
-
 app.get("/petition/thanks", async (request, response) => {
-    const signature_id = request.session.signatures_id;
+    const signature_id = request.session.users_id;
 
-    if (!request.session.signatures_id) {
+    if (!request.session.users_id) {
         response.redirect("/petition");
     }
     try {

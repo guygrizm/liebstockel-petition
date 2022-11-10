@@ -19,7 +19,3 @@ document.getElementById("submit").addEventListener("click", function () {
     canvasString = canvas.toDataURL();
     signatureInput.value = canvasString;
 });
-/* canvasString = canvas.toDataURL();
-console.log(signatureInput); */
-/* signatureInput.value = canvasString;
-console.log(signatureInput.value); */
