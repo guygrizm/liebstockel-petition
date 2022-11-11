@@ -51,7 +51,7 @@ app.get("/register", (request, response) => {
 app.post("/register", async (request, response) => {
     try {
         const newUser = await createUser(request.body);
-        request.session.user_id = newUser.id;
+        request.session.users_id = newUser.id;
         response.redirect("/petition");
     } catch (error) {
         console.log("error register", error);

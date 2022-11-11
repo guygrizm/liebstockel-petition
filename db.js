@@ -28,7 +28,7 @@ function getSignatureById(users_id) {
 function newSignature({ signature }, { users_id }) {
     return db
         .query(
-            `INSERT INTO signatures (signature, user_id)
+            `INSERT INTO signatures (signature, users_id)
         VALUES ($1, $2)
         RETURNING *`,
             [signature, users_id]

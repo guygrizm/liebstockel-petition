@@ -1,10 +1,12 @@
-DROP TABLE IF EXISTS signatures;
+ DROP TABLE IF EXISTS signatures;
 
 CREATE TABLE signatures (
     id SERIAL PRIMARY KEY,
-    signature VARCHAR NOT NULL CHECK(signature != '')
+    signature VARCHAR NOT NULL CHECK(signature != ''),
     users_id INTEGER
 );
+
+DROP TABLE IF EXISTS users;
 
 CREATE TABLE users (
     id SERIAL PRIMARY KEY,
