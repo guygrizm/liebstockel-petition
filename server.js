@@ -27,20 +27,6 @@ app.use(
     })
 );
 
-app.get("/register", (request, response) => {
-    response.render("register");
-});
-
-app.post("/register", async (request, response) => {
-    try {
-        const newUser = await createUser(request.body);
-        request.session.user_id = newUser.id;
-        response.redirect("/petition");
-    } catch (error) {
-        console.log("error register", error);
-    }
-});
-
 app.get("/login", (request, response) => {
     response.render("login");
 });
@@ -55,6 +41,20 @@ app.post("/login", async (request, response) => {
         response.redirect("/petition");
     } catch (error) {
         console.log("error login", error);
+    }
+});
+
+app.get("/register", (request, response) => {
+    response.render("register");
+});
+
+app.post("/register", async (request, response) => {
+    try {
+        const newUser = await createUser(request.body);
+        request.session.user_id = newUser.id;
+        response.redirect("/petition");
+    } catch (error) {
+        console.log("error register", error);
     }
 });
 
