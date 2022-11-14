@@ -1,12 +1,15 @@
- DROP TABLE IF EXISTS signatures;
+DROP TABLE IF EXISTS signatures;
+DROP TABLE IF EXISTS users;
+DROP TABLE IF EXISTS user_profiles;
+
 
 CREATE TABLE signatures (
     id SERIAL PRIMARY KEY,
     signature VARCHAR NOT NULL CHECK(signature != ''),
-    users_id INTEGER
+    user_id INTEGER
 );
 
-DROP TABLE IF EXISTS users;
+
 
 CREATE TABLE users (
     id SERIAL PRIMARY KEY,
@@ -15,13 +18,18 @@ CREATE TABLE users (
     email VARCHAR(50) NOT NULL UNIQUE,
     password_hash VARCHAR NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-)
+);
 
- /* INSERT INTO
-    signatures (
-        
-        signature 
-        ); 
-  */
+
+
+
+CREATE TABLE user_profiles (
+  id SERIAL PRIMARY KEY,
+  age INT,
+  city VARCHAR,
+  url VARCHAR,
+  user_id INT NOT NULL UNIQUE REFERENCES users(id)
+);
+ 
 
         

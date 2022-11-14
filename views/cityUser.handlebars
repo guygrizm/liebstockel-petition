@@ -1,0 +1,20 @@
+main>
+    <section>
+        <h1>All signers from {{city}}</h1>
+        <ul>
+            {{#each foundCity}}
+            <li> {{#if url}}
+                        <a href={{url}}>{{first_name}} {{last_name}}</a>
+                        {{else}}
+                        {{first_name}} {{last_name}}
+                        {{/if}}
+                        {{#if age}}
+                        | {{age}}
+                        {{/if}}
+                        {{#if city}}
+                        | <a href="/petition/signers/{{city}}">{{city}}</a>
+                        {{/if}}</li>
+            {{/each}}
+        </ul>
+    </section>
+</main>

@@ -1,10 +1,10 @@
 const { createUser, login } = require("./db");
 
 createUser({
-    email: "secondtry@gmail.com",
+    email: "six@gmail.com",
     first_name: "first",
     last_name: "last",
-    password: "second",
+    password: "six",
 }).then((newUser) => {
     console.log("newUser", newUser);
 });

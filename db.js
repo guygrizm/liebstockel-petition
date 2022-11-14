@@ -15,23 +15,30 @@ async function hashPassword(password) {
 
 // plural method - should return an array (result.rows)
 function getSignatures() {
-    return db.query(`SELECT * FROM signatures`).then((result) => result.rows);
+    return db
+        .query(
+            `SELECT first_name, last_name, age, city, url 
+            FROM users 
+            INNER JOIN signatures ON users.id = signatures.user_id
+            INNER JOIN user_profiles ON users.id = user_profiles.user_id`
+        )
+        .then((result) => result.rows);
 }
 
 // singular method - should return the first entry of result.rows
-function getSignatureById(users_id) {
+function getSignatureById(user_id) {
     return db
-        .query(`SELECT * FROM signatures WHERE id = $1`, [users_id])
+        .query(`SELECT * FROM signatures WHERE id = $1`, [user_id])
         .then((result) => result.rows[0]);
 }
 
-function newSignature({ signature }, { users_id }) {
+function newSignature({ signature }, { user_id }) {
     return db
         .query(
-            `INSERT INTO signatures (signature, users_id)
+            `INSERT INTO signatures (signature, user_id)
         VALUES ($1, $2)
         RETURNING *`,
-            [signature, users_id]
+            [signature, user_id]
         )
         .then((result) => result.rows[0]);
 }
@@ -55,6 +62,21 @@ async function getUserByEmail(email) {
     ]);
     return result.rows[0];
 }
+
+function getUserById(user_id) {
+    return db
+        .query(
+            `
+    SELECT first_name, last_name, email, age, city, url, signature
+    FROM users
+    FULL JOIN signatures ON users.id = signatures.user_id
+    FULL JOIN user_profiles ON users.id = user_profiles.user_id
+    WHERE users.id = $1
+    `,
+            [user_id]
+        )
+        .then((result) => result.rows[0]);
+}
 // login
 async function login({ email, password }) {
     const foundUser = await getUserByEmail(email);
@@ -69,11 +91,38 @@ async function login({ email, password }) {
     }
     return foundUser;
 }
-
+// createProfile
+async function createProfile({ age, city, url, user_id }) {
+    const result = await db.query(
+        `
+    INSERT INTO user_profiles (age, city, url, user_id)
+    VALUES ($1, $2, $3, $4)
+    RETURNING *
+    `,
+        [age, city, url, user_id]
+    );
+    return result.rows[0];
+}
+async function findCities(city) {
+    const result = await db.query(
+        `
+            SELECT first_name, last_name, age, city, url 
+            FROM users 
+            INNER JOIN signatures ON users.id = signatures.user_id
+            INNER JOIN user_profiles ON users.id = user_profiles.user_id
+            WHERE LOWER(city) = LOWER($1)
+            `,
+        [city]
+    );
+    return result.rows;
+}
 module.exports = {
     getSignatures,
     newSignature,
     getSignatureById,
     createUser,
     login,
+    createProfile,
+    findCities,
+    getUserById,
 };
