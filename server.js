@@ -1,13 +1,18 @@
 const express = require("express");
 const {
-    getSignatureById,
     getSignatures,
     newSignature,
-    login,
+    getSignatureById,
     createUser,
+    login,
     createProfile,
     findCities,
     getUserById,
+    editUser,
+    editProfile,
+    deleteSignature,
+    deleteUser,
+    deleteProfile,
 } = require("./db");
 const { engine } = require("express-handlebars");
 const path = require("path");
@@ -29,28 +34,6 @@ app.use(
         sameSite: true,
     })
 );
-
-app.get("/login", (request, response) => {
-    if (request.session.user_id) {
-        response.redirect("/petition");
-        return;
-    }
-    response.render("login");
-});
-
-app.post("/login", async (request, response) => {
-    try {
-        const loggedUser = await login(request.body);
-
-        request.session.user_id = loggedUser.id;
-        response.redirect("/petition");
-    } catch (error) {
-        console.log("error login", error);
-        response.render("/login", {
-            error: "Something went wrong. Please try again.",
-        });
-    }
-});
 
 app.get("/register", (request, response) => {
     if (request.session.user_id) {
@@ -91,15 +74,74 @@ app.post("/profile", async (request, response) => {
     }
 });
 
+app.get("/profile/edit", async (request, response) => {
+    const { user_id } = request.session;
+    const user = await getUserById(user_id);
+    response.render("edit", { user });
+});
+
+app.post("/profile/edit", async (request, response) => {
+    try {
+        const { user_id } = request.session;
+        await editUser({ ...request.body, user_id });
+        response.redirect("/petition/thanks");
+    } catch (error) {
+        console.log("error edit", error);
+    }
+});
+
+app.post("/profile/delete", async (request, response) => {
+    try {
+        const { user_id } = request.session;
+        await deleteUser(user_id);
+        await deleteProfile(user_id);
+        await deleteSignature(user_id);
+        request.session = null;
+        response.redirect("/register");
+    } catch (error) {
+        console.log("error delete", error);
+    }
+});
+
+app.get("/login", (request, response) => {
+    if (request.session.user_id) {
+        response.redirect("/petition");
+        return;
+    }
+    response.render("login");
+});
+
+app.post("/login", async (request, response) => {
+    try {
+        const loggedUser = await login(request.body);
+
+        request.session.user_id = loggedUser.id;
+        const signature_id = await getSignatureById(loggedUser.id);
+        const signId = signature_id;
+        request.session.signatures_id = signId;
+        response.redirect("/petition");
+        return;
+    } catch (error) {
+        console.log("error login", error);
+        const { email, password } = request.body;
+        response.render("login", {
+            error: "Something went wrong. Please try again.",
+            email,
+            password,
+        });
+    }
+});
+
 app.get("/petition", async (request, response) => {
     try {
         const user_id = request.session.user_id;
+        const sig_id = request.session.signatures_id;
+
         if (!user_id) {
             response.redirect("/register");
             return;
         }
-        const signature_id = await getSignatureById(user_id);
-        if (signature_id) {
+        if (sig_id) {
             response.redirect("/petition/thanks");
             return;
         }
@@ -112,7 +154,7 @@ app.post("/petition", async (request, response) => {
     try {
         const newSigner = await newSignature(request.body, request.session);
         request.session.signatures_id = newSigner.id;
-        console.log("SESSION", request.session);
+        /* console.log("SESSION", request.session); */
         response.redirect("/petition/thanks");
     } catch (error) {
         console.log("error", error);
@@ -123,20 +165,33 @@ app.post("/petition", async (request, response) => {
 });
 
 app.get("/petition/thanks", async (request, response) => {
-    const signature_id = request.session.user_id;
-
-    if (!request.session.user_id) {
-        response.redirect("/petition");
-    }
     try {
-        const signer = await getSignatureById(signature_id);
-        console.log(signer);
+        const { user_id } = request.session;
+        const { signatures_id } = request.session;
+        if (!user_id) {
+            response.redirect("/register");
+            return;
+        }
+        if (!signatures_id) {
+            response.redirect("/petition");
+            return;
+        }
+        const signature = await getUserById(user_id);
         const signers = await getSignatures();
-        console.log(signers);
-
-        response.render("thanks", { signers, signer });
+        response.render("thanks", { signers, signature });
     } catch (error) {
-        console.log("ERROR", error);
+        console.log("error", error);
+    }
+});
+
+app.post("/petition/thanks", async (request, response) => {
+    try {
+        const { user_id } = request.session;
+        await deleteSignature(user_id);
+        request.session.signatures_id = null;
+        response.redirect("/petition");
+    } catch (error) {
+        console.log("error thanks", error);
     }
 });
 
@@ -147,9 +202,13 @@ app.get("/petition/signers", async (request, response) => {
 
 app.get("/petition/signers/:city", async (request, response) => {
     const { city } = request.params;
-    console.log(city);
-    const foundCity = findCities(city);
-    response.render("cityUser", { foundCity });
+
+    const foundCity = await findCities(city);
+    response.render("cityUser", { city: city, foundCity });
+});
+
+app.get("/logout", (request, response) => {
+    (request.session = null), response.redirect("/register");
 });
 
 const port = process.env.PORT || 8080;

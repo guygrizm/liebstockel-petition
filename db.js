@@ -92,7 +92,7 @@ async function login({ email, password }) {
     return foundUser;
 }
 // createProfile
-async function createProfile({ age, city, url, user_id }) {
+async function createProfile({ age, city, url }, user_id) {
     const result = await db.query(
         `
     INSERT INTO user_profiles (age, city, url, user_id)
@@ -103,6 +103,8 @@ async function createProfile({ age, city, url, user_id }) {
     );
     return result.rows[0];
 }
+//city finder
+
 async function findCities(city) {
     const result = await db.query(
         `
@@ -116,6 +118,50 @@ async function findCities(city) {
     );
     return result.rows;
 }
+// delete functions
+
+//delete signature
+function deleteSignature(user_id) {
+    return db.query(`DELETE FROM signatures WHERE user_id = $1`, [user_id]);
+}
+
+//delete user
+
+async function deleteUser(id) {
+    return db.query(`DELETE FROM users WHERE id = $1`, [id]);
+}
+
+// delete profile
+async function deleteProfile(user_id) {
+    return db.query(`DELETE FROM user_profiles WHERE user_id = $1`, [user_id]);
+}
+
+//edit user
+
+async function editUser({ first_name, last_name, email, user_id }) {
+    const result = await db.query(
+        `UPDATE users
+    SET first_name = $1, last_name = $2, email = $3
+    WHERE users.id = $4
+    `,
+        [first_name, last_name, email, user_id]
+    );
+    return result.rows[0];
+}
+
+async function editProfile({ age, city, url, user_id }) {
+    const result = await db.query(
+        ` INSERT INTO
+    user_profiles (age, city, url, user_id )
+    VALUES($1, $2,$3,$4)
+    ON CONFLICT (user_id)
+    DO UPDATE SET 
+    age = $1, city = $2, url = $3`,
+        [age, city, url, user_id]
+    );
+    return result.rows[0];
+}
+
 module.exports = {
     getSignatures,
     newSignature,
@@ -125,4 +171,9 @@ module.exports = {
     createProfile,
     findCities,
     getUserById,
+    editUser,
+    editProfile,
+    deleteSignature,
+    deleteUser,
+    deleteProfile,
 };

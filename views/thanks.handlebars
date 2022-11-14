@@ -1,4 +1,4 @@
-<header>
+{{!-- <header>
     <ul>
         <li><a href="/petition">Home</a></li>
 
@@ -13,14 +13,25 @@
         alt="{{first_name}} {{last_name}}"
     />
 {{/signer}}
-<a href="/petition/signers">See all {{signers.length}} signers</a>
-{{!--  {{#each signatures}}
-            <tr>
-                <td><input type="checkbox" name="" id="" /></td>
-                <td>{{first_name}} {{last_name}}</td>
-                <td>{{signatures}}</td>
-            </tr>
-        {{/each}} --}}
+<a href="/petition/signers">See all {{signers.length}} signers</a> --}}
+{{> header}}
+<main>
+    <section>
+        {{#signature}}
+            <h1>Thank you for signing the petition, {{first_name}}</h1>
 
-{{! <a href="/admin/users/create_user" <button="newUser">Create new user</button></a>
-<button class="deleteUser" disabled>Delete User</button> }}
+            <img
+                class="signature"
+                src="{{signature}}"
+                alt="{{first_name}} {{last_name}}"
+            />
+        {{/signature}}
+        <form action="/petition/thanks" method="post">
+            <button type="submit" id="delete" onclick="confirmDelete()">Delete
+                Signature</button>
+        </form>
+    </section>
+    <section><a href="/petition/signers" class="moreSigners">See all
+            {{signers.length}}
+            signers</a></section>
+</main>

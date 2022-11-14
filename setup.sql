@@ -6,7 +6,8 @@ DROP TABLE IF EXISTS user_profiles;
 CREATE TABLE signatures (
     id SERIAL PRIMARY KEY,
     signature VARCHAR NOT NULL CHECK(signature != ''),
-    user_id INTEGER
+    user_id INTEGER NOT NULL UNIQUE REFERENCES users(id)
+    ON DELETE CASCADE
 );
 
 
@@ -29,6 +30,7 @@ CREATE TABLE user_profiles (
   city VARCHAR,
   url VARCHAR,
   user_id INT NOT NULL UNIQUE REFERENCES users(id)
+  ON DELETE CASCADE
 );
  
 

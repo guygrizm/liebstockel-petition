@@ -1,0 +1,40 @@
+{{> header}}
+
+<main>
+    <section>
+        <form action="/profile/edit" method="POST">
+            {{#user}}
+                <label for="fname">First name</label>
+                <input
+                    type="text"
+                    name="first_name"
+                    id="fname"
+                    value="{{first_name}}"
+                />
+                <label for="lname">Last name</label>
+                <input
+                    type="text"
+                    name="last_name"
+                    id="lname"
+                    value="{{last_name}}"
+                />
+                <label for="email">Email</label>
+                <input type="email" name="email" id="email" value="{{email}}" />
+                <label for="password">Password</label>
+                <input type="password" name="password" id="password" value="" />
+                <label for="age">Age</label>
+                <input type="number" name="age" id="age" value="{{age}}" />
+                <label for="city">City</label>
+                <input type="text" name="city" id="city" value="{{city}}" />
+                <label for="url">Homepage</label>
+                <input type="url" name="url" id="url" value="{{url}}" />
+            {{/user}}
+            <button type="submit">Edit</button>
+        </form>
+
+        <form action="/profile/delete" method="POST">
+            <button type="submit" id="delete" onclick="confirmDelete()">Remove
+                Profile</button>
+        </form>
+    </section>
+</main>

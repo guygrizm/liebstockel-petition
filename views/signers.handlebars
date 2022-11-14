@@ -1,17 +1,36 @@
-<header>
-    <ul>
-        <li><a href="#">Home</a></li>
-
-    </ul>
-</header>
-
-<h1>These are our {{signers.length}} Signers</h1>
+{{!-- <h1>These are our {{signers.length}} Signers</h1>
 
 <ul class="signers">
     {{#each signers}}
         <li>{{first_name}} {{last_name}}</li>
     {{/each}}
-</ul>
+</ul> --}}
+{{> header}}
+<main>
+    <section>
+        <h1>These are our {{signers.length}} Signers</h1>
+        <ul>
+            {{#each signers}}
 
-{{! <a href="/admin/users/create_user" <button="newUser">Create new user</button></a>
-<button class="deleteUser" disabled>Delete User</button> }}
+                <li>
+                    {{#if url}}
+                        <a href={{url}}>{{first_name}} {{last_name}}</a>
+                    {{else}}
+                        {{first_name}}
+                        {{last_name}}
+                    {{/if}}
+                    {{#if age}}
+                        |
+                        {{age}}
+                    {{/if}}
+                    {{#if city}}
+                        |
+                        <a href="/petition/signers/{{city}}">{{city}}</a>
+                    {{/if}}
+
+                </li>
+
+            {{/each}}
+        </ul>
+    </section>
+</main>
