@@ -28,7 +28,7 @@ function getSignatures() {
 // singular method - should return the first entry of result.rows
 function getSignatureById(user_id) {
     return db
-        .query(`SELECT * FROM signatures WHERE id = $1`, [user_id])
+        .query(`SELECT * FROM signatures WHERE user_id = $1`, [user_id])
         .then((result) => result.rows[0]);
 }
 

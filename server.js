@@ -21,6 +21,7 @@ const { response } = require("express");
 const app = express();
 const cookieSession = require("cookie-session");
 const { SESSION_SECRET } = require("./secrets.json");
+const { resourceUsage } = require("process");
 
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
@@ -34,6 +35,11 @@ app.use(
         sameSite: true,
     })
 );
+
+app.use(function (request, response, next) {
+    console.log(request.url, request.session);
+    next();
+});
 
 app.get("/register", (request, response) => {
     if (request.session.user_id) {
@@ -67,7 +73,7 @@ app.post("/profile", async (request, response) => {
             request.body,
             request.session.user_id
         );
-        request.session.user_id = profile.id;
+
         response.redirect("/petition");
     } catch (error) {
         console.log("error", error);
@@ -84,6 +90,7 @@ app.post("/profile/edit", async (request, response) => {
     try {
         const { user_id } = request.session;
         await editUser({ ...request.body, user_id });
+        await editProfile({ ...request.body, user_id });
         response.redirect("/petition/thanks");
     } catch (error) {
         console.log("error edit", error);
@@ -117,8 +124,13 @@ app.post("/login", async (request, response) => {
 
         request.session.user_id = loggedUser.id;
         const signature_id = await getSignatureById(loggedUser.id);
-        const signId = signature_id;
-        request.session.signatures_id = signId;
+        console.log(signature_id);
+
+        if (signature_id) {
+            const signId = signature_id.id;
+            request.session.signatures_id = signId;
+        }
+
         response.redirect("/petition");
         return;
     } catch (error) {
