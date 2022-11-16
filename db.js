@@ -46,6 +46,7 @@ function newSignature({ signature }, { user_id }) {
 // createUser
 async function createUser({ first_name, last_name, email, password }) {
     const hashedPassword = await hashPassword(password);
+
     const result = await db.query(
         `
     INSERT INTO users (first_name, last_name, email, password_hash)
@@ -93,6 +94,9 @@ async function login({ email, password }) {
 }
 // createProfile
 async function createProfile({ age, city, url }, user_id) {
+    if (!age) {
+        age = 0;
+    }
     const result = await db.query(
         `
     INSERT INTO user_profiles (age, city, url, user_id)

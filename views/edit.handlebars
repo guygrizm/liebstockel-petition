@@ -2,7 +2,7 @@
 
 <main>
     <section>
-        <form action="/profile/edit" method="POST">
+        <form class="gridTemplate" action="/profile/edit" method="POST">
             {{#user}}
                 <label for="fname">First name</label>
                 <input
@@ -32,9 +32,9 @@
             <button type="submit">Edit</button>
         </form>
 
-        <form action="/profile/delete" method="POST">
-            <button type="submit" id="delete" onclick="confirmDelete()">Remove
-                Profile</button>
+        <form class="gridTemplate" action="/profile/delete" method="POST">
+            <button type="submit" id="delete" onclick="confirmDelete()">Delete
+                Account</button>
         </form>
     </section>
 </main>
